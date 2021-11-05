@@ -4,7 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "elm make ./src/PhotoFolders.elm --output ./dist/app.js"
+            "command": "elm make ./src/Main.elm --output ./dist/app.js"
         }
     ]
 }
