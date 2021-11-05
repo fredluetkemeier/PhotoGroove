@@ -1,25 +1,22 @@
 {
-  "name": "photogroove",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fredluetkemeier/PhotoGroove.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/fredluetkemeier/PhotoGroove/issues"
-  },
-  "homepage": "https://github.com/fredluetkemeier/PhotoGroove#readme",
-  "dependencies": {
-    "http-server-spa": "^1.3.0"
-  }
+    "name": "photogroove",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {},
+    "scripts": {
+        "build": "elm make ./src/Main.elm --output ./dist/app.js",
+        "start": "npx servor ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fredluetkemeier/PhotoGroove.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/fredluetkemeier/PhotoGroove/issues"
+    },
+    "homepage": "https://github.com/fredluetkemeier/PhotoGroove#readme",
+    "dependencies": {}
 }
