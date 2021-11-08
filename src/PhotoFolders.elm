@@ -1,4 +1,4 @@
-module PhotoFolders exposing (main)
+module PhotoFolders exposing (Model, Msg, init, update, view)
 
 import Browser
 import Dict exposing (Dict)
@@ -7,9 +7,8 @@ import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode exposing (Decoder, int, list, string)
-import Json.Decode.Pipeline exposing (required)
-import PhotoGroove exposing (urlPrefix)
-import Json.Decode.Pipeline exposing (custom)
+import Json.Decode.Pipeline exposing (custom, required)
+import PhotoGallery exposing (urlPrefix)
 
 
 type Folder
@@ -42,9 +41,9 @@ initialModel =
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( initialModel
+init : Maybe String -> ( Model, Cmd Msg )
+init selectedFilename =
+    ( { initialModel | selectedPhotoUrl = selectedFilename }
     , Http.get
         { url = "http://elm-in-action.com/folders/list"
         , expect = Http.expectJson GotInitialModel modelDecoder
@@ -55,9 +54,9 @@ init _ =
 modelDecoder : Decoder Model
 modelDecoder =
     Decode.succeed Model
-    |> custom (Decode.succeed Nothing)
-    |> custom modelPhotosDecoder
-    |> custom folderDecoder
+        |> custom (Decode.succeed Nothing)
+        |> custom modelPhotosDecoder
+        |> custom folderDecoder
 
 
 type Msg
@@ -105,16 +104,6 @@ view model =
             ]
         , div [ class "selected-photo" ] [ selectedPhoto ]
         ]
-
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        }
 
 
 type alias Photo =
@@ -260,26 +249,31 @@ photosDecoder =
     Decode.keyValuePairs jsonPhotoDecoder
         |> Decode.map fromPairs
 
-folderDecoder : Decoder Folder 
+
+folderDecoder : Decoder Folder
 folderDecoder =
     Decode.succeed folderFromJson
         |> required "name" string
         |> required "photos" photosDecoder
         |> required "subfolders" (Decode.lazy (\_ -> list folderDecoder))
 
-folderFromJson : String -> Dict String Photo -> List Folder -> Folder 
+
+folderFromJson : String -> Dict String Photo -> List Folder -> Folder
 folderFromJson name photos subfolders =
-    Folder 
-        {name = name
+    Folder
+        { name = name
         , expanded = True
         , subfolders = subfolders
-        , photoUrls = Dict.keys photos}
+        , photoUrls = Dict.keys photos
+        }
+
 
 modelPhotosDecoder : Decoder (Dict String Photo)
 modelPhotosDecoder =
     Decode.succeed modelPhotosFromJson
         |> required "photos" photosDecoder
         |> required "subfolders" (Decode.lazy (\_ -> list modelPhotosDecoder))
+
 
 modelPhotosFromJson :
     Dict String Photo

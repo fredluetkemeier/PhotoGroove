@@ -1,11 +1,8 @@
-port module PhotoGroove exposing
+port module PhotoGallery exposing
     ( Model
-    , Msg(..)
-    , Photo
-    , Status(..)
-    , initialModel
-    , main
-    , photoDecoder
+    , Msg
+    , init
+    , subscriptions
     , update
     , urlPrefix
     , view
